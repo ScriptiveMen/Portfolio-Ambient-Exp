@@ -3,6 +3,8 @@ import Works from "./pages/Works";
 import Education from "./pages/Education";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
+import About from "./pages/About";
+import Skills from "./pages/Skills";
 
 const App = () => {
   return (
@@ -11,7 +13,9 @@ const App = () => {
       <div className="circle2 fixed top-[50%] right-0 h-20 w-20 rounded-full bg-teal-400 blur-[35px] saturate-[1] opacity-40"></div>
 
       <Home />
-      {/* <Works /> */}
+      <Works />
+      <Skills />
+      <About />
       {/* <Education /> */}
     </div>
   );

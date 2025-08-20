@@ -30,7 +30,7 @@ const Home = () => {
             Creative
           </h1>
 
-          <div className="sub-text absolute bottom-0 md:static flex items-center justify-center gap-15">
+          <div className="sub-text absolute bottom-0 md:static flex items-center justify-center gap-10 md:gap-15">
             <span className="text-[0.67rem] font-medium text-gray-400 pt-0 block uppercase">
               Currently Available FOR <br /> Freelance Worldwide
             </span>
@@ -47,7 +47,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="w-full leading-none flex flex-col md:flex-row items-end md:items-baseline py-4 md:justify-end md:gap-10">
+        <div className="w-full leading-none flex flex-col md:flex-row items-end md:items-baseline md:py-4 md:justify-end md:gap-10">
           <p className="italianno-regular pr-3 text-[15vw] leading-none md:text-[9vw] text-teal-400">
             " Web "
           </p>
