@@ -3,7 +3,7 @@ import GlowText from "../components/GlowText";
 
 const Education = () => {
   return (
-    <div className="min-h-screen w-full px-5 md:px-15 pt-5 md:pt-20">
+    <div className="min-h-screen w-full">
       <GlowText title={"Educations."} />
     </div>
   );
