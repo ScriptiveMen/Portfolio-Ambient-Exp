@@ -24,7 +24,7 @@ const Home = () => {
   return (
     <div id="home" className="min-h-screen w-full">
       <Navbar />
-      <div className="heading  font-semibold flex flex-col items-start relative pb-40 pt-20 md:pt-30">
+      <div className="heading font-semibold flex flex-col items-start relative pb-40 pt-20 md:pt-30">
         <div className=" flex w-full justify-start gap-[12vw]">
           <h1 className="text-[19vw] md:text-[12vw] leading-none tracking-tight">
             Creative
@@ -48,7 +48,7 @@ const Home = () => {
         </div>
 
         <div className="w-max md:w-full leading-none flex flex-col md:flex-row items-end md:items-baseline md:py-4 md:justify-end md:gap-10">
-          <p className="italianno-regular pr-3 text-[15vw] leading-none md:text-[9vw] text-teal-400">
+          <p className="italianno-regular pr-3 text-[15vw] leading-none md:text-[9vw] text-[#30E897]">
             " Web "
           </p>
           <h1 className="text-[19vw] md:text-[12vw] leading-[0.5]">

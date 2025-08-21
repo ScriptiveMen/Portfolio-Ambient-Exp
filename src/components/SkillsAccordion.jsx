@@ -149,7 +149,7 @@ function AccordionItem({ skill }) {
 
 export default function SkillsAccordion() {
   return (
-    <div className="min-h-screen flex flex-col items-center py-10">
+    <div className="flex flex-col items-center py-10">
       <div className="w-full md:w-[90%] space-y-3">
         {skills.map((skill, index) => (
           <AccordionItem key={index} skill={skill} />
