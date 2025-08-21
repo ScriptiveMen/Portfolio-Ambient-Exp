@@ -1,8 +1,5 @@
-import React from "react";
 import Works from "./pages/Works";
-import Education from "./pages/Education";
 import Home from "./pages/Home";
-import Navbar from "./components/Navbar";
 import About from "./pages/About";
 import Skills from "./pages/Skills";
 
