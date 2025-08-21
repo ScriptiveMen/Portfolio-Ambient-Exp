@@ -7,7 +7,7 @@ const GlowText = ({ title }) => {
         {title}
       </h1>
 
-      <h1 className="absolute top-0 text-6xl md:text-8xl font-bold tracking-tight bg-[url('public/images/bloomText.jpeg')] bg-clip-text text-transparent bg-cover bg-center py-2">
+      <h1 className="absolute top-0 text-6xl md:text-8xl font-bold tracking-tight bg-[url('/images/bloomText.jpeg')] bg-clip-text text-transparent bg-cover bg-center py-2">
         {title}
       </h1>
     </div>

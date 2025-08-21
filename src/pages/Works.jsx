@@ -8,9 +8,6 @@ const Works = () => {
           <div className="dash h-0.5 bg-white w-10"></div>
           What I do
         </span>
-        {/* <h1 className="md:text-[5vw] text-[15vw] pb-[1vw] leading-none font-semibold tracking-tight">
-            Work <br className="md:hidden" /> Samples
-          </h1> */}
         <GlowText title={"Work Samples."} />
       </div>
     </div>
