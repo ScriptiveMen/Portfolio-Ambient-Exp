@@ -3,6 +3,8 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Skills from "./pages/Skills";
 import ScrollProvider from "./components/ScrollProvider";
+import Honors from "./pages/Honors";
+import Certifications from "./pages/Certifications";
 
 const App = () => {
   return (
@@ -14,6 +16,8 @@ const App = () => {
         <Home />
         <Works />
         <Skills />
+        <Honors />
+        <Certifications />
         <About />
       </ScrollProvider>
     </div>
