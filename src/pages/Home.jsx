@@ -22,9 +22,9 @@ const Home = () => {
   };
 
   return (
-    <div id="home" className="min-h-screen w-full">
+    <div id="home" className="w-full">
       <Navbar />
-      <div className="heading font-semibold flex flex-col items-start relative pb-40 pt-20 md:pt-30">
+      <div className="heading  font-semibold flex flex-col items-start relative md:pb-40 pb-30 pt-15 md:pt-40">
         <div className=" flex w-full justify-start gap-[12vw]">
           <h1 className="text-[19vw] md:text-[12vw] leading-none tracking-tight">
             Creative
