@@ -3,7 +3,7 @@ import { Link } from "react-scroll";
 
 const Navbar = () => {
   return (
-    <div className="sticky z-[999] backdrop-blur-[10px] top-0 left-0 w-full py-5 pt-[2rem] flex items-center justify-between">
+    <div className="w-full py-5 pt-[2rem] flex items-center justify-between">
       <div className="left">
         <Link
           to="home"
@@ -31,14 +31,13 @@ const Navbar = () => {
           Work Samples
         </Link>
 
-        <Link
-          to="work"
-          smooth={true}
-          duration={500}
-          className="cursor-pointer text-md hidden md:block opacity-60"
+        <a
+          href="/images/Satya_Kumar_Ram__Full_Stack_.pdf"
+          download="Satya_Kumar_Ram_Resume.pdf"
+          className="text-md hidden md:block opacity-60"
         >
           Download Resume
-        </Link>
+        </a>
 
         <NavLink
           to={"#"}

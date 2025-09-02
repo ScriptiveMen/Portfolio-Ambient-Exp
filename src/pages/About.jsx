@@ -4,7 +4,7 @@ import GlowButton from "../components/GlowButton";
 
 const About = () => {
   return (
-    <div className=" w-full pt-10 pb-20">
+    <div className=" w-full pb-20">
       <div className="heading pt-5  flex flex-col items-baseline justify-start">
         <p className="md:text-[2.5vw] text-[6vw] pl-[0.4vw] leading-2 tracking-tight">
           Not so
@@ -17,11 +17,13 @@ const About = () => {
           <img className="h-10 md:h-15" src="/images/message.png" alt="" />
         </p>
       </div>
-      <div className="h-full w-full  pt-20 flex items-center justify-center ">
+      <div className="h-full w-full  pt-20 md:pt-40 flex items-center justify-center ">
         <div className="w-full gap-8 h-full flex flex-col md:flex-row justify-between items-center">
           <div className="w-[60%] self-start md:self-center md:w-[20%]">
-            <h3 className="pb-3 font-semibold">About Me.</h3>
-            <p className="text-[#979FAD] ">
+            <h3 className="pb-1.5 md:pb-3 font-semibold text-sm md:text-base">
+              About Me.
+            </h3>
+            <p className="text-[#979FAD] capitalize text-sm md:text-base">
               I am Satya Kumar Ram, I create unconventional yet functional &
               visually pleasing interfaces for the mobile and web.
             </p>
@@ -30,17 +32,17 @@ const About = () => {
           <div className="seperator gap-10 flex flex-col-reverse md:flex-row">
             <div className="w-full flex  text-center  flex-col gap-5 md:gap-10 items-center justify-center">
               <div className="heading relative leading-none flex flex-col items-center justify-center">
-                <div className="text relative">
-                  <h1 className="md:text-[6vw] text-[9vw] font-bold tracking-tight blur-[80px] saturate-[1] text-[#14250F] py-2">
+                <div className="text relative pb-1">
+                  <h1 className="md:text-[6vw] text-[19vw] font-[800] tracking-tight blur-[90px] saturate-[1] opacity-60 text-[#30E897] py-2">
                     Let’s Build Together
                   </h1>
 
-                  <h1 className="absolute top-0 text-[9vw] md:text-[6vw]  font-bold tracking-tight bg-[url('/images/big-green-mask.jpg')] bg-clip-text text-transparent bg-cover bg-center py-2">
+                  <h1 className="absolute top-0 text-[19vw] md:text-[6vw] font-[800] tracking-tight bg-[url('/images/big-green-mask.jpg')] bg-clip-text text-transparent bg-cover bg-center py-2">
                     Let’s Build Together
                   </h1>
                 </div>
 
-                <span className="block text-2xl md:text-[3vw]  font-semibold">
+                <span className="block text-2xl pb-3 md:text-[3vw]  font-semibold">
                   From Vision to Reality
                 </span>
               </div>
@@ -54,12 +56,12 @@ const About = () => {
               <GlowButton />
             </div>
 
-            <div className="w-[60%] self-end md:self-center md:w-[20%]">
-              <h3 className="pb-3 font-semibold">
+            <div className="w-[60%] md:text-left self-end md:self-center md:w-[20%]">
+              <h3 className="pb-1.5 md:pb-3 font-semibold text-sm md:text-base capitalize">
                 Things I Can Help you with.
               </h3>
-              <p className=" text-[#979FAD]">
-                Web & mobile / UI&Ux / Branding / front-end Development/
+              <p className=" text-[#979FAD] capitalize text-sm md:text-base">
+                Web & mobile / UI & UX / Branding / front-end Development/
                 Back-end Development
               </p>
             </div>

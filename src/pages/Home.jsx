@@ -24,7 +24,7 @@ const Home = () => {
   return (
     <div id="home" className="w-full">
       <Navbar />
-      <div className="heading  font-semibold flex flex-col items-start relative md:pb-40 pb-30 pt-15 md:pt-40">
+      <div className="heading  font-semibold flex flex-col items-start relative pb-30 pt-15 md:pt-40">
         <div className=" flex w-full justify-start gap-[12vw]">
           <h1 className="text-[19vw] md:text-[12vw] leading-none tracking-tight">
             Creative
@@ -55,6 +55,16 @@ const Home = () => {
             Developer
           </h1>
         </div>
+      </div>
+
+      <div className="flex items-center justify-center">
+        <a
+          href="/images/Satya_Kumar_Ram__Full_Stack_.pdf"
+          download="Satya_Kumar_Ram_Resume.pdf"
+          className="block px-5 py-2 mt-15 text-[0.85rem] font-semibold md:hidden md:mt-0 rounded-full bg-[#ef6993] text-white text-center"
+        >
+          Download Resume Offline
+        </a>
       </div>
     </div>
   );
