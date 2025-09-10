@@ -1,6 +1,7 @@
 const GlowButton = () => {
   return (
-    <button
+    <a
+      href="mailto:i.satyakumarram@gmail.com"
       className="
         flex items-center gap-2 
         rounded-full 
@@ -15,7 +16,7 @@ const GlowButton = () => {
       {/* glowing dot */}
       <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse"></span>
       Contact Me, I'm available for work
-    </button>
+    </a>
   );
 };
 

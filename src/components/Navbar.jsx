@@ -1,5 +1,4 @@
-import { NavLink } from "react-router-dom";
-import { Link } from "react-scroll";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
@@ -23,9 +22,7 @@ const Navbar = () => {
 
       <div className="right font-thin flex items-center justify-center gap-5">
         <Link
-          to="work"
-          smooth={true}
-          duration={500}
+          to="#"
           className="cursor-pointer text-md hidden md:block opacity-60"
         >
           Work Samples
@@ -39,13 +36,14 @@ const Navbar = () => {
           Download Resume
         </a>
 
-        <NavLink
-          to={"#"}
-          className={`text-md hidden md:flex  items-center justify-center gap-2`}
+        <a
+          href="https://github.com/ScriptiveMen"
+          target="_blank"
+          className={`text-md hidden md:flex cursor-pointer  items-center justify-center gap-2`}
         >
           <i className="ri-github-fill text-2xl"></i>
           See Github
-        </NavLink>
+        </a>
 
         <div className="flex md:hidden items-center justify-center gap-1 text-[#EF6A93]">
           <i className="ri-menu-2-line text-sm"></i>
