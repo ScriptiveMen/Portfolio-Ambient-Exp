@@ -7,7 +7,7 @@ const Honors = () => {
       name: "Job-Ready Hackathon: Frontend",
       leaderboard: "Participation",
       year: "2025",
-      link: "https://ik.imagekit.io/mfac8dwut/Portfolio%20Assets/FrontEnd%20Hackathon.pdf?updatedAt=1757489391158",
+      link: "https://ik.imagekit.io/mfac8dwut/Portfolio%20Assets/Cohort1-FrontEnd-Hackathon.png?updatedAt=1758639915726",
     },
   ];
 

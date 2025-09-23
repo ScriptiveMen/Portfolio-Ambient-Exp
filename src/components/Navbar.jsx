@@ -6,7 +6,7 @@ const Navbar = () => {
       <div className="left">
         <Link
           to="home"
-          smooth={true}
+          smooth="true"
           duration={500}
           className="cursor-pointer text-md font-extralight flex items-center justify-center gap-2 md:gap-4"
         >
