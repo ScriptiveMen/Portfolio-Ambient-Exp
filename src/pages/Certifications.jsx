@@ -6,7 +6,7 @@ const Certifications = () => {
     {
       title: "Job-Ready Cohort 1.0",
       desc: "by Sheryians Coding School, a Full-Stack Web Development program covering Frontend, Backend, Deployment.",
-      link: "",
+      link: "https://ik.imagekit.io/mfac8dwut/Portfolio%20Assets/cohort1-completion.png?updatedAt=1758639229527",
     },
   ];
 
@@ -40,7 +40,7 @@ const Certifications = () => {
                 </div>
                 <div className="right shrink-0 h-[15rem] w-full md:w-[30rem] rounded-2xl overflow-hidden shadow-lg">
                   <img
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-cover object-top"
                     src={
                       certificate.link
                         ? certificate.link
