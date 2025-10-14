@@ -3,14 +3,18 @@
 @import "tailwindcss";
 
 .italianno-regular {
-  font-family: "Italianno", cursive;
-  font-weight: 400;
-  font-style: normal;
+    font-family: "Italianno", cursive;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .red-hat-display {
-  font-family: "Red Hat Display", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
+    font-family: "Red Hat Display", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.parent {
+    scrollbar-width: none;
 }

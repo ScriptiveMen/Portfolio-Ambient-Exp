@@ -43,7 +43,57 @@ const loginUser = [
     respondWithValidationErrors,
 ];
 
+const projectValidator = [
+    body("title")
+        .trim()
+        .notEmpty()
+        .withMessage("Title is required")
+        .isLength({ min: 3, max: 100 })
+        .withMessage("Title must be 3-100 characters"),
+
+    body("role")
+        .trim()
+        .notEmpty()
+        .withMessage("Role is required")
+        .isLength({ max: 50 })
+        .withMessage("Role must be less than 50 characters"),
+
+    body("year")
+        .isInt({ min: 2003, max: new Date().getFullYear() + 1 })
+        .withMessage("Year must be valid"),
+
+    body("link").optional().isURL().withMessage("Link must be a valid URL"),
+
+    respondWithValidationErrors,
+];
+
+const honorValidator = [
+    body("title")
+        .trim()
+        .notEmpty()
+        .withMessage("Title is required")
+        .isLength({ min: 3, max: 100 })
+        .withMessage("Title must be 3-100 characters"),
+
+    body("position")
+        .trim()
+        .notEmpty()
+        .withMessage("Position is required")
+        .isLength({ max: 50 })
+        .withMessage("Position must be less than 50 characters"),
+
+    body("year")
+        .isInt({ min: 2003, max: new Date().getFullYear() + 1 })
+        .withMessage("Year must be valid"),
+
+    body("link").optional().isURL().withMessage("Link must be a valid URL"),
+
+    respondWithValidationErrors,
+];
+
 module.exports = {
     registerUser,
     loginUser,
+    projectValidator,
+    honorValidator,
 };

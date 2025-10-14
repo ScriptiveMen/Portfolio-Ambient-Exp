@@ -1,11 +1,4 @@
-import Works from "./pages/Works";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Skills from "./pages/Skills";
-import ScrollProvider from "./components/ScrollProvider";
-import Honors from "./pages/Honors";
-import Certifications from "./pages/Certifications";
-import Footer from "./components/Footer";
+import MainRoutes from "./routes/MainRoutes";
 
 const App = () => {
     return (
@@ -13,17 +6,7 @@ const App = () => {
             <div className="circle1 fixed top-[15%] left-0 h-20 w-20 rounded-full bg-pink-400 blur-[35px] saturate-[1] opacity-40 z-0"></div>
             <div className="circle2 fixed top-[50%] right-0 h-20 w-20 rounded-full bg-teal-400 blur-[35px] saturate-[1] opacity-40 z-0"></div>
 
-            <ScrollProvider>
-                <div className="relative z-10">
-                    <Home />
-                    <Works />
-                    <Skills />
-                    <Honors />
-                    {/* <Certifications /> */}
-                    <About />
-                    <Footer />
-                </div>
-            </ScrollProvider>
+            <MainRoutes />
         </div>
     );
 };
