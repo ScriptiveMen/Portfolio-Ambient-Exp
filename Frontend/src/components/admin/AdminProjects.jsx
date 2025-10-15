@@ -1,5 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Plus, Edit2, Trash2, X, Upload, ExternalLink } from "lucide-react";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    addProject,
+    deleteProject,
+    setProjects,
+    updateProject,
+} from "../../store/slices/ProjectSlice";
 
 const useForm = (initialValues) => {
     const [values, setValues] = useState(initialValues);
@@ -21,27 +29,11 @@ const useForm = (initialValues) => {
 };
 
 const AdminProjects = () => {
-    const [projects, setProjects] = useState([
-        {
-            id: 1,
-            thumbnail:
-                "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop",
-            title: "E-Commerce Platform",
-            year: "2024",
-            role: "Lead Developer",
-            link: "https://example.com/project1",
-        },
-        {
-            id: 2,
-            thumbnail:
-                "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=300&fit=crop",
-            title: "Mobile Banking App",
-            year: "2023",
-            role: "Full Stack Developer",
-            link: "https://example.com/project2",
-        },
-    ]);
+    const dispatch = useDispatch();
 
+    const { projects } = useSelector((state) => state.projects);
+
+    const [selectedFile, setSelectedFile] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProject, setEditingProject] = useState(null);
     const [previewImage, setPreviewImage] = useState("");
@@ -62,11 +54,9 @@ const AdminProjects = () => {
     const handleImageUpload = (e) => {
         const file = e.target.files?.[0];
         if (file) {
+            setSelectedFile(file); // ✅ keep the file itself
             const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreviewImage(reader.result);
-                setFormValues({ ...formData, thumbnail: reader.result });
-            };
+            reader.onloadend = () => setPreviewImage(reader.result);
             reader.readAsDataURL(file);
         }
     };
@@ -91,39 +81,74 @@ const AdminProjects = () => {
         setPreviewImage("");
     };
 
-    const handleSubmit = (e) => {
+    useEffect(() => {
+        async function getProjects() {
+            const res = await axios.get(
+                "http://localhost:3000/api/admin/projects",
+                { withCredentials: true }
+            );
+
+            dispatch(setProjects(res.data.projects));
+        }
+
+        getProjects();
+    }, [dispatch]);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log("=== Form Submission ===");
-        console.log("Action:", editingProject ? "Editing" : "Creating");
-        console.log("Form Data:", formData);
-        console.log("======================");
+        try {
+            // 🧱 Build multipart form data
+            const formDataToSend = new FormData();
+            formDataToSend.append("title", formData.title);
+            formDataToSend.append("year", formData.year);
+            formDataToSend.append("role", formData.role);
+            formDataToSend.append("link", formData.link);
 
-        if (editingProject) {
-            const updatedProjects = projects.map((p) =>
-                p.id === editingProject.id ? { ...formData, id: p.id } : p
-            );
-            setProjects(updatedProjects);
-            console.log("Updated Projects:", updatedProjects);
-        } else {
-            const newProject = { ...formData, id: Date.now() };
-            const updatedProjects = [...projects, newProject];
-            setProjects(updatedProjects);
-            console.log("New Project Added:", newProject);
-            console.log("All Projects:", updatedProjects);
+            if (selectedFile) {
+                formDataToSend.append("thumbnail", selectedFile); // ✅ add file here
+            }
+
+            if (editingProject) {
+                // 🔄 Update existing project
+                const res = await axios.patch(
+                    `http://localhost:3000/api/admin/projects/${editingProject._id}`,
+                    formDataToSend,
+                    {
+                        withCredentials: true,
+                        headers: { "Content-Type": "multipart/form-data" },
+                    }
+                );
+
+                dispatch(updateProject(res.data.project));
+            } else {
+                // 🆕 Create new project
+                const res = await axios.post(
+                    "http://localhost:3000/api/admin/projects",
+                    formDataToSend,
+                    {
+                        withCredentials: true,
+                        headers: { "Content-Type": "multipart/form-data" },
+                    }
+                );
+                dispatch(addProject(res.data.project));
+            }
+
+            closeModal();
+        } catch (error) {
+            console.error("Error uploading project:", error);
         }
-        closeModal();
     };
 
-    const handleDelete = (id) => {
-        const deletedProject = projects.find((p) => p.id === id);
-        console.log("=== Deleting Project ===");
-        console.log("Deleted Project:", deletedProject);
+    const handleDelete = async (id) => {
+        if (window.confirm("Are you want to delete this project?")) {
+            await axios.delete(
+                `http://localhost:3000/api/admin/projects/${id}`,
+                { withCredentials: true }
+            );
 
-        const updatedProjects = projects.filter((p) => p.id !== id);
-        setProjects(updatedProjects);
-        console.log("Remaining Projects:", updatedProjects);
-        console.log("========================");
+            dispatch(deleteProject(id));
+        }
     };
 
     return (
@@ -150,7 +175,7 @@ const AdminProjects = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {projects.map((project) => (
                         <div
-                            key={project.id}
+                            key={project._id}
                             className="group relative bg-[#252525] rounded-lg overflow-hidden hover:bg-[#2a2a2a] transition-all duration-300"
                         >
                             <div className="relative h-48 overflow-hidden bg-[#1f1f1f]">
@@ -197,7 +222,9 @@ const AdminProjects = () => {
                                         Edit
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(project.id)}
+                                        onClick={() =>
+                                            handleDelete(project._id)
+                                        }
                                         className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-colors"
                                     >
                                         <Trash2 size={16} />
