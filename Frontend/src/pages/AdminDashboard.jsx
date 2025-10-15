@@ -19,12 +19,13 @@ const AdminDashboard = () => {
             <div className="h-full w-full flex gap-5 justify-center ">
                 <div className="left flex flex-col py-10 px-5 gap-2  justify-start w-[20%] border border-white/10  bg-[#131313] rounded-tl-2xl rounded-bl-2xl ">
                     <NavLink
+                        end
                         className={({ isActive }) =>
                             `text-2xl font-semibold p-3 rounded-lg ${
                                 isActive ? "bg-white/3" : ""
                             }`
                         }
-                        to={"/admin/projects"}
+                        to={"/admin"}
                     >
                         Projects
                     </NavLink>

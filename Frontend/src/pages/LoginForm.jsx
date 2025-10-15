@@ -1,22 +1,51 @@
-import React from "react";
 import { useForm } from "react-hook-form";
 import { LogIn, User, Lock } from "lucide-react";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { currentuser, setLoading } from "../store/slices/UserSlice";
+import { Navigate } from "react-router-dom";
+import LoadingSpinner from "../components/admin/LoadingSpinner";
 
 export default function LoginForm() {
+    // Fix: Use the same selector as ProtectedRoute
+    const user = useSelector((state) => state.user?.user);
+    const loading = useSelector((state) => state.user?.loading);
+
+    const dispatch = useDispatch();
+
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
 
-    const onSubmit = (data) => {
+    // Redirect if already logged in
+    if (user && !loading) {
+        return <Navigate to="/admin" replace />;
+    }
+
+    const onSubmit = async (data) => {
         console.log("Login Data:", data);
-        console.log("Username:", data.username);
-        console.log("Password:", data.password);
+
+        try {
+            dispatch(setLoading(true));
+            const res = await axios.post(
+                "http://localhost:3000/api/admin/login",
+                data,
+                {
+                    withCredentials: true,
+                }
+            );
+            console.log("Login success");
+            dispatch(currentuser(res.data.user._id));
+        } catch (error) {
+            console.log("Error logging in!", error);
+            dispatch(setLoading(false));
+        }
     };
 
     return (
-        <div className="min-h-screen w-full  flex items-center justify-center p-4 sm:p-6 lg:p-8">
+        <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 lg:p-8">
             {/* Background overlay */}
             <div className="absolute inset-0 bg-black/20"></div>
 
@@ -105,9 +134,17 @@ export default function LoginForm() {
                         {/* Submit Button */}
                         <button
                             onClick={handleSubmit(onSubmit)}
-                            className="w-full py-3 sm:py-3.5 px-4 bg-[#EF6A93] rounded-lg hover:bg-[#EF6A93]/80 text-white font-semibold transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#EF6A93] focus:ring-offset-2 focus:ring-offset-transparent mt-6"
+                            disabled={loading}
+                            className="w-full py-3 sm:py-3.5 px-4 bg-[#EF6A93] rounded-lg hover:bg-[#EF6A93]/80 text-white font-semibold transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#EF6A93] focus:ring-offset-2 focus:ring-offset-transparent mt-6 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
-                            Sign In
+                            {loading ? (
+                                <>
+                                    <LoadingSpinner size="sm" color="white" />
+                                    <span>Signing In...</span>
+                                </>
+                            ) : (
+                                "Sign In"
+                            )}
                         </button>
                     </div>
                 </div>

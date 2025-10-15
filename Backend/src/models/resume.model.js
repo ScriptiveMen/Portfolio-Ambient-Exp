@@ -4,7 +4,19 @@ const resumeSchema = new mongoose.Schema({
     user: {
         type: String,
     },
-    pdfURL: {
+    name: {
+        type: String,
+        required: true,
+    },
+    size: {
+        type: String,
+        required: true,
+    },
+    uploadDate: {
+        type: String,
+        required: true,
+    },
+    url: {
         type: String,
         required: true,
     },

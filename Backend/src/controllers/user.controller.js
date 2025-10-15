@@ -60,7 +60,15 @@ async function loginUser(req, res) {
     });
 }
 
+async function getUser(req, res) {
+    res.status(200).json({
+        message: "User fetched sucessfully",
+        user: req.user,
+    });
+}
+
 module.exports = {
     registerUser,
     loginUser,
+    getUser,
 };

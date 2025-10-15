@@ -2,11 +2,15 @@ const resumeModel = require("../models/resume.model");
 const uploadFile = require("../services/storage.service");
 
 async function uploadResume(req, res) {
-    const pdf = await uploadFile(req.file);
+    const file = await uploadFile(req.file);
+    const { name, size, uploadDate } = req.body;
 
     const resume = await resumeModel.create({
         user: req.user.id,
-        pdfURL: pdf.url,
+        name,
+        size,
+        uploadDate,
+        url: file.url,
     });
 
     res.status(201).json({ message: "pdf uploaded sucessfully", resume });

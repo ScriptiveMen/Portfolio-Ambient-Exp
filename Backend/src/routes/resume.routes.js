@@ -10,7 +10,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 router.post(
     "/",
     authMiddleware,
-    upload.single("pdf"),
+    upload.single("resume"),
     resumeController.uploadResume
 );
 

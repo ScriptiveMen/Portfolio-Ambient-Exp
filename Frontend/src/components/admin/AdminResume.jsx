@@ -1,11 +1,41 @@
-import React, { useState } from "react";
-import { Upload, FileText, Trash2, Download, Eye } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Upload, FileText, Trash2, Eye } from "lucide-react";
+import axios from "axios";
+import LoadingSpinner from "./LoadingSpinner";
 
 const AdminResume = () => {
     const [resume, setResume] = useState(null);
     const [uploading, setUploading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [deleting, setDeleting] = useState(false);
 
-    const handleFileUpload = (e) => {
+    useEffect(() => {
+        async function getResume() {
+            try {
+                setLoading(true);
+                const response = await axios.get(
+                    "http://localhost:3000/api/admin/resume",
+                    { withCredentials: true }
+                );
+                setResume(response.data.resume);
+            } catch (error) {
+                console.error("Failed to fetch resume:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        getResume();
+    }, []);
+
+    const handleFileUpload = async (e) => {
+        if (resume) {
+            await axios.delete("http://localhost:3000/api/admin/resume", {
+                withCredentials: true,
+            });
+            setResume(null);
+        }
+
         const file = e.target.files[0];
         if (!file) return;
 
@@ -23,35 +53,67 @@ const AdminResume = () => {
 
         setUploading(true);
 
-        // Simulate upload (replace with actual API call)
-        setTimeout(() => {
-            setResume({
-                name: file.name,
-                size: (file.size / 1024).toFixed(2) + " KB",
-                uploadDate: new Date().toLocaleDateString(),
-                url: URL.createObjectURL(file), // For preview
-            });
-            setUploading(false);
-        }, 1000);
-    };
+        try {
+            // 🧩 Prepare form data
+            const formData = new FormData();
+            formData.append("resume", file);
+            formData.append("name", file.name);
+            formData.append("size", (file.size / 1024).toFixed(2) + " KB");
+            formData.append(
+                "uploadDate",
+                new Date().toLocaleDateString("en-GB")
+            );
 
-    const handleDelete = () => {
-        if (window.confirm("Are you sure you want to delete this resume?")) {
-            setResume(null);
+            // 🧩 Send multipart/form-data request
+            const { data } = await axios.post(
+                "http://localhost:3000/api/admin/resume",
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    withCredentials: true,
+                }
+            );
+
+            setResume(data.resume);
+        } catch (error) {
+            console.error("Upload failed:", error);
+            alert("Failed to upload resume");
+        } finally {
+            setUploading(false);
         }
     };
 
-    const handleDownload = () => {
-        // Create download link
-        const link = document.createElement("a");
-        link.href = resume.url;
-        link.download = resume.name;
-        link.click();
+    const handleDelete = async () => {
+        if (window.confirm("Are you sure you want to delete this resume?")) {
+            try {
+                setDeleting(true);
+                await axios.delete("http://localhost:3000/api/admin/resume", {
+                    withCredentials: true,
+                });
+                setResume(null);
+            } catch (error) {
+                console.error("Delete failed:", error);
+                alert("Failed to delete resume");
+            } finally {
+                setDeleting(false);
+            }
+        }
     };
 
     const handleView = () => {
         window.open(resume.url, "_blank");
     };
+
+    // Show loading spinner while fetching initial data
+    if (loading) {
+        return (
+            <div className="w-full h-full flex items-center justify-center min-h-[400px]">
+                <LoadingSpinner size="lg" text="Loading resume data..." />
+            </div>
+        );
+    }
 
     return (
         <div className="w-full h-full p-6">
@@ -86,7 +148,7 @@ const AdminResume = () => {
                         </div>
                         {uploading ? (
                             <div className="flex flex-col items-center gap-2">
-                                <div className="w-8 h-8 border-4 border-[#EF6A93] border-t-transparent rounded-full animate-spin"></div>
+                                <LoadingSpinner size="md" />
                                 <p className="text-lg text-white">
                                     Uploading...
                                 </p>
@@ -133,23 +195,31 @@ const AdminResume = () => {
                                 <button
                                     onClick={handleView}
                                     className="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors flex items-center gap-2"
+                                    disabled={deleting}
                                 >
                                     <Eye className="w-4 h-4" />
                                     Preview
                                 </button>
-                                <button
-                                    onClick={handleDownload}
-                                    className="px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors flex items-center gap-2"
-                                >
-                                    <Download className="w-4 h-4" />
-                                    Download
-                                </button>
+
                                 <button
                                     onClick={handleDelete}
-                                    className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors flex items-center gap-2"
+                                    disabled={deleting}
+                                    className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    <Trash2 className="w-4 h-4" />
-                                    Delete
+                                    {deleting ? (
+                                        <>
+                                            <LoadingSpinner
+                                                size="sm"
+                                                color="#f87171"
+                                            />
+                                            <span>Deleting...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Trash2 className="w-4 h-4" />
+                                            Delete
+                                        </>
+                                    )}
                                 </button>
                             </div>
                         </div>
@@ -166,7 +236,11 @@ const AdminResume = () => {
                     <div className="mt-6 pt-6 border-t border-white/10">
                         <label
                             htmlFor="resume-replace"
-                            className="inline-flex items-center gap-2 px-6 py-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+                            className={`inline-flex items-center gap-2 px-6 py-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors ${
+                                uploading || deleting
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : "cursor-pointer"
+                            }`}
                         >
                             <Upload className="w-4 h-4" />
                             Replace Resume
@@ -177,6 +251,7 @@ const AdminResume = () => {
                             className="hidden"
                             accept=".pdf"
                             onChange={handleFileUpload}
+                            disabled={uploading || deleting}
                         />
                     </div>
                 </div>
