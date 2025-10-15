@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Plus, Trash2, Edit2, Code2 } from "lucide-react";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    addSkill,
+    deleteSkill,
+    setSkills,
+    updateSkill,
+} from "../../store/slices/SkillsSlice";
 
 const AdminSkill = () => {
-    const [skills, setSkills] = useState([
-        {
-            id: 1,
-            title: "Frontend Development",
-            icon: "ri-flask-line",
-            content: [{ section: "HTML" }, { section: "CSS" }],
-        },
-    ]);
+    const dispatch = useDispatch();
+    const { skills } = useSelector((state) => state.skills);
+
     const [editingId, setEditingId] = useState(null);
 
     const { register, control, handleSubmit, reset, setValue } = useForm({
@@ -26,32 +29,69 @@ const AdminSkill = () => {
         name: "content",
     });
 
-    const onSubmit = (data) => {
-        console.log("Form Data:", data);
-
-        if (editingId) {
-            setSkills(
-                skills.map((skill) =>
-                    skill.id === editingId ? { ...data, id: editingId } : skill
-                )
+    useEffect(() => {
+        async function getSkills() {
+            const res = await axios.get(
+                "http://localhost:3000/api/admin/skills",
+                { withCredentials: true }
             );
-            setEditingId(null);
+
+            dispatch(setSkills(res.data.skills));
+        }
+
+        getSkills();
+    }, [dispatch]);
+
+    const onSubmit = async (data) => {
+        if (editingId) {
+            try {
+                const res = await axios.patch(
+                    `http://localhost:3000/api/admin/skills/${editingId}`,
+                    data,
+                    { withCredentials: true }
+                );
+
+                dispatch(updateSkill(res.data.updatedSkill));
+            } catch (error) {
+                console.log("Error editing skills:", error);
+            } finally {
+                setEditingId(null);
+            }
         } else {
-            setSkills([...skills, { ...data, id: Date.now() }]);
+            try {
+                const res = await axios.post(
+                    "http://localhost:3000/api/admin/skills",
+                    data,
+                    { withCredentials: true }
+                );
+
+                dispatch(addSkill(res.data.skill));
+            } catch (err) {
+                console.log("Error uploading skills: ", err);
+            }
         }
         reset();
     };
 
-    const handleEdit = (skill) => {
-        setEditingId(skill.id);
+    const handleEdit = async (skill) => {
+        setEditingId(skill._id);
         setValue("title", skill.title);
         setValue("icon", skill.icon);
         setValue("content", skill.content);
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this skill?")) {
-            setSkills(skills.filter((skill) => skill.id !== id));
+            try {
+                await axios.delete(
+                    `http://localhost:3000/api/admin/skills/${id}`,
+                    { withCredentials: true }
+                );
+
+                dispatch(deleteSkill(id));
+            } catch (error) {
+                console.log("Error deleting skill", error);
+            }
         }
     };
 
@@ -182,7 +222,7 @@ const AdminSkill = () => {
             <div className="space-y-4">
                 {skills.map((skill) => (
                     <div
-                        key={skill.id}
+                        key={skill._id}
                         className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors"
                     >
                         <div className="flex items-start gap-4">
@@ -213,14 +253,14 @@ const AdminSkill = () => {
                                 <div className="flex items-center gap-3 mt-4">
                                     <button
                                         onClick={() => handleEdit(skill)}
-                                        className="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors flex items-center gap-2"
+                                        className="px-4 py-2 bg-blue-500/20 cursor-pointer text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors flex items-center gap-2"
                                     >
                                         <Edit2 className="w-4 h-4" />
                                         Edit
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(skill.id)}
-                                        className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors flex items-center gap-2"
+                                        onClick={() => handleDelete(skill._id)}
+                                        className="px-4 cursor-pointer py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors flex items-center gap-2"
                                     >
                                         <Trash2 className="w-4 h-4" />
                                         Delete
