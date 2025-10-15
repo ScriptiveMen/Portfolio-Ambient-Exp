@@ -49,7 +49,7 @@ async function updateHonor(req, res) {
     if (title !== undefined && title !== "") updatedHonor.title = title;
     if (year !== undefined && year !== "") updatedHonor.year = year;
     if (position !== undefined && position !== "")
-        updatedHonor.title = position;
+        updatedHonor.position = position;
 
     const newHonor = await honorModel.findByIdAndUpdate(
         id,
