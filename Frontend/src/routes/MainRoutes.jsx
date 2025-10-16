@@ -1,14 +1,27 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import AdminDashboard from "../pages/AdminDashboard";
 import AllPages from "../pages/AllPages";
-import AdminProjects from "../components/admin/AdminProjects";
-import AdminResume from "../components/admin/AdminResume";
-import AdminHonors from "../components/admin/AdminHonors";
-import AdminSkill from "../components/admin/AdminSkill";
-import LoginForm from "../pages/LoginForm";
-import ProtectedRoute from "../components/admin/ProtectedRoute";
+import LoadingSpinner from "../components/admin/LoadingSpinner";
+
+// Lazy load all admin-related components
+const AdminDashboard = lazy(() => import("../pages/AdminDashboard"));
+const AdminProjects = lazy(() => import("../components/admin/AdminProjects"));
+const AdminResume = lazy(() => import("../components/admin/AdminResume"));
+const AdminHonors = lazy(() => import("../components/admin/AdminHonors"));
+const AdminSkill = lazy(() => import("../components/admin/AdminSkill"));
+const LoginForm = lazy(() => import("../pages/LoginForm"));
+const ProtectedRoute = lazy(() => import("../components/admin/ProtectedRoute"));
+
+const AdminLoadingFallback = () => (
+    <div className="w-full h-screen flex items-center justify-center">
+        <LoadingSpinner
+            size="lg"
+            text="Loading admin panel..."
+            color="#EF6A93"
+        />
+    </div>
+);
 
 const MainRoutes = () => {
     const user = useSelector((state) => state.auth?.user);
@@ -18,31 +31,91 @@ const MainRoutes = () => {
         <Routes>
             <Route path="/" element={<AllPages />} />
 
-            {/* Redirect to /admin if already logged in */}
+            {/* Lazy loaded login route */}
             <Route
                 path="/admin/login"
                 element={
                     isAuthenticated ? (
                         <Navigate to="/admin" replace />
                     ) : (
-                        <LoginForm />
+                        <Suspense fallback={<AdminLoadingFallback />}>
+                            <LoginForm />
+                        </Suspense>
                     )
                 }
             />
 
-            {/* Protected admin routes */}
+            {/* Lazy loaded protected admin routes */}
             <Route
                 path="/admin"
                 element={
-                    <ProtectedRoute>
-                        <AdminDashboard />
-                    </ProtectedRoute>
+                    <Suspense fallback={<AdminLoadingFallback />}>
+                        <ProtectedRoute>
+                            <AdminDashboard />
+                        </ProtectedRoute>
+                    </Suspense>
                 }
             >
-                <Route index element={<AdminProjects />} />
-                <Route path="skills" element={<AdminSkill />} />
-                <Route path="honors" element={<AdminHonors />} />
-                <Route path="resume" element={<AdminResume />} />
+                <Route
+                    index
+                    element={
+                        <Suspense
+                            fallback={
+                                <LoadingSpinner
+                                    size="lg"
+                                    text="Loading projects..."
+                                />
+                            }
+                        >
+                            <AdminProjects />
+                        </Suspense>
+                    }
+                />
+                <Route
+                    path="skills"
+                    element={
+                        <Suspense
+                            fallback={
+                                <LoadingSpinner
+                                    size="lg"
+                                    text="Loading skills..."
+                                />
+                            }
+                        >
+                            <AdminSkill />
+                        </Suspense>
+                    }
+                />
+                <Route
+                    path="honors"
+                    element={
+                        <Suspense
+                            fallback={
+                                <LoadingSpinner
+                                    size="lg"
+                                    text="Loading honors..."
+                                />
+                            }
+                        >
+                            <AdminHonors />
+                        </Suspense>
+                    }
+                />
+                <Route
+                    path="resume"
+                    element={
+                        <Suspense
+                            fallback={
+                                <LoadingSpinner
+                                    size="lg"
+                                    text="Loading resume..."
+                                />
+                            }
+                        >
+                            <AdminResume />
+                        </Suspense>
+                    }
+                />
             </Route>
         </Routes>
     );

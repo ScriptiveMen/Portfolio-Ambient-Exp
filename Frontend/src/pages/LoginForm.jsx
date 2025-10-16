@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { LogIn, User, Lock } from "lucide-react";
-import axios from "axios";
+import axios from "../utils/axios";
 import { useDispatch, useSelector } from "react-redux";
 import { currentuser, setLoading } from "../store/slices/UserSlice";
 import { Navigate } from "react-router-dom";
@@ -29,17 +29,14 @@ export default function LoginForm() {
 
         try {
             dispatch(setLoading(true));
-            const res = await axios.post(
-                "http://localhost:3000/api/admin/login",
-                data,
-                {
-                    withCredentials: true,
-                }
-            );
+            const res = await axios.post("/api/admin/login", data, {
+                withCredentials: true,
+            });
             console.log("Login success");
-            dispatch(currentuser(res.data.user._id));
+            dispatch(currentuser(res.data.user));
         } catch (error) {
             console.log("Error logging in!", error);
+        } finally {
             dispatch(setLoading(false));
         }
     };

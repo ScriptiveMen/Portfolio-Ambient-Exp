@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import MainRoutes from "./routes/MainRoutes";
-import axios from "axios";
+import axios from "./utils/axios";
 import { useDispatch } from "react-redux";
 import { currentuser, setLoading } from "./store/slices/UserSlice";
 
@@ -11,12 +11,9 @@ const App = () => {
         async function getUser() {
             try {
                 dispatch(setLoading(true));
-                const response = await axios.get(
-                    "http://localhost:3000/api/admin/me",
-                    {
-                        withCredentials: true,
-                    }
-                );
+                const response = await axios.get("/api/admin/me", {
+                    withCredentials: true,
+                });
                 // Fix: Pass the whole user object, not just the id
                 dispatch(currentuser(response.data.user));
             } catch (error) {

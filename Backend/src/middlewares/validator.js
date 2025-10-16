@@ -86,8 +86,6 @@ const honorValidator = [
         .isInt({ min: 2003, max: new Date().getFullYear() + 1 })
         .withMessage("Year must be valid"),
 
-    body("link").optional().isURL().withMessage("Link must be a valid URL"),
-
     respondWithValidationErrors,
 ];
 

@@ -13,4 +13,7 @@ router.post("/login", validation.loginUser, userController.loginUser);
 
 router.get("/me", authMiddleware, userController.getUser);
 
+//GET /api/admin/logout
+router.get("/logout", userController.logoutUser);
+
 module.exports = router;

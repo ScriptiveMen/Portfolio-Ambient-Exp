@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Upload, FileText, Trash2, Eye } from "lucide-react";
-import axios from "axios";
+import axios from "../../utils/axios";
 import LoadingSpinner from "./LoadingSpinner";
 
 const AdminResume = () => {
@@ -13,10 +13,9 @@ const AdminResume = () => {
         async function getResume() {
             try {
                 setLoading(true);
-                const response = await axios.get(
-                    "http://localhost:3000/api/admin/resume",
-                    { withCredentials: true }
-                );
+                const response = await axios.get("/api/admin/resume", {
+                    withCredentials: true,
+                });
                 setResume(response.data.resume);
             } catch (error) {
                 console.error("Failed to fetch resume:", error);
@@ -30,7 +29,7 @@ const AdminResume = () => {
 
     const handleFileUpload = async (e) => {
         if (resume) {
-            await axios.delete("http://localhost:3000/api/admin/resume", {
+            await axios.delete("/api/admin/resume", {
                 withCredentials: true,
             });
             setResume(null);
@@ -65,16 +64,12 @@ const AdminResume = () => {
             );
 
             // 🧩 Send multipart/form-data request
-            const { data } = await axios.post(
-                "http://localhost:3000/api/admin/resume",
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                    withCredentials: true,
-                }
-            );
+            const { data } = await axios.post("/api/admin/resume", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                withCredentials: true,
+            });
 
             setResume(data.resume);
         } catch (error) {
@@ -89,7 +84,7 @@ const AdminResume = () => {
         if (window.confirm("Are you sure you want to delete this resume?")) {
             try {
                 setDeleting(true);
-                await axios.delete("http://localhost:3000/api/admin/resume", {
+                await axios.delete("/api/admin/resume", {
                     withCredentials: true,
                 });
                 setResume(null);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Plus, Trash2, Edit2, Code2 } from "lucide-react";
-import axios from "axios";
+import axios from "../../utils/axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
     addSkill,
@@ -31,10 +31,9 @@ const AdminSkill = () => {
 
     useEffect(() => {
         async function getSkills() {
-            const res = await axios.get(
-                "http://localhost:3000/api/admin/skills",
-                { withCredentials: true }
-            );
+            const res = await axios.get("/api/admin/skills", {
+                withCredentials: true,
+            });
 
             dispatch(setSkills(res.data.skills));
         }
@@ -46,7 +45,7 @@ const AdminSkill = () => {
         if (editingId) {
             try {
                 const res = await axios.patch(
-                    `http://localhost:3000/api/admin/skills/${editingId}`,
+                    `/api/admin/skills/${editingId}`,
                     data,
                     { withCredentials: true }
                 );
@@ -59,11 +58,9 @@ const AdminSkill = () => {
             }
         } else {
             try {
-                const res = await axios.post(
-                    "http://localhost:3000/api/admin/skills",
-                    data,
-                    { withCredentials: true }
-                );
+                const res = await axios.post("/api/admin/skills", data, {
+                    withCredentials: true,
+                });
 
                 dispatch(addSkill(res.data.skill));
             } catch (err) {
@@ -83,10 +80,9 @@ const AdminSkill = () => {
     const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this skill?")) {
             try {
-                await axios.delete(
-                    `http://localhost:3000/api/admin/skills/${id}`,
-                    { withCredentials: true }
-                );
+                await axios.delete(`/api/admin/skills/${id}`, {
+                    withCredentials: true,
+                });
 
                 dispatch(deleteSkill(id));
             } catch (error) {

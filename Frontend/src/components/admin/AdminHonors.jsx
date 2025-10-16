@@ -6,9 +6,11 @@ import {
     X,
     Award,
     Trophy,
-    CloudLightning,
+    Upload,
+    ExternalLink,
+    FileText,
 } from "lucide-react";
-import axios from "axios";
+import axios from "../../utils/axios";
 import LoadingSpinner from "./LoadingSpinner";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -40,14 +42,16 @@ const AdminHonors = () => {
     const [submitting, setSubmitting] = useState(false);
     const [deleting, setDeleting] = useState(null);
 
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [previewCertificate, setPreviewCertificate] = useState("");
+
     useEffect(() => {
         async function getHonors() {
             try {
                 setLoading(true);
-                const res = await axios.get(
-                    "http://localhost:3000/api/admin/honors",
-                    { withCredentials: true }
-                );
+                const res = await axios.get("/api/admin/honors", {
+                    withCredentials: true,
+                });
 
                 dispatch(addhonor(res.data.honors));
             } catch (error) {
@@ -58,7 +62,7 @@ const AdminHonors = () => {
             }
         }
         getHonors();
-    }, []);
+    }, [dispatch]);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingHonor, setEditingHonor] = useState(null);
@@ -72,15 +76,30 @@ const AdminHonors = () => {
         title: "",
         position: "",
         year: "",
+        link: "",
+        certificate: "",
     });
+
+    const handleCertificateUpload = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setSelectedFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => setPreviewCertificate(reader.result);
+            reader.readAsDataURL(file);
+        }
+    };
 
     const openModal = (honor = null) => {
         if (honor) {
             setEditingHonor(honor);
             setFormValues(honor);
+            setPreviewCertificate(honor.certificate || "");
         } else {
             setEditingHonor(null);
             resetForm();
+            setPreviewCertificate("");
+            setSelectedFile(null);
         }
         setIsModalOpen(true);
     };
@@ -89,6 +108,8 @@ const AdminHonors = () => {
         setIsModalOpen(false);
         setEditingHonor(null);
         resetForm();
+        setPreviewCertificate("");
+        setSelectedFile(null);
     };
 
     const handleSubmit = async (e) => {
@@ -97,25 +118,34 @@ const AdminHonors = () => {
         try {
             setSubmitting(true);
 
+            const formDataToSend = new FormData();
+
+            formDataToSend.append("title", formData.title);
+            formDataToSend.append("position", formData.position);
+            formDataToSend.append("year", formData.year);
+
+            if (selectedFile) {
+                formDataToSend.append("certificate", selectedFile);
+            }
+
             if (editingHonor) {
-                // Update existing honor
                 const res = await axios.patch(
-                    `http://localhost:3000/api/admin/honors/${editingHonor._id}`,
+                    `/api/admin/honors/${editingHonor._id}`,
+                    formDataToSend,
                     {
-                        title: formData.title,
-                        position: formData.position,
-                        year: formData.year,
-                    },
-                    { withCredentials: true }
+                        withCredentials: true,
+                        headers: { "Content-Type": "multipart/form-data" },
+                    }
                 );
                 dispatch(updateHonor(res.data.newHonor));
             } else {
-                // Create new honor
-
                 const res = await axios.post(
-                    "http://localhost:3000/api/admin/honors",
-                    formData,
-                    { withCredentials: true }
+                    "/api/admin/honors",
+                    formDataToSend,
+                    {
+                        withCredentials: true,
+                        headers: { "Content-Type": "multipart/form-data" },
+                    }
                 );
 
                 const newHonor = res.data.honor;
@@ -138,11 +168,9 @@ const AdminHonors = () => {
 
         try {
             setDeleting(id);
-            await axios.delete(`http://localhost:3000/api/admin/honors/${id}`, {
+            await axios.delete(`/api/admin/honors/${id}`, {
                 withCredentials: true,
             });
-
-            console.log(id);
 
             dispatch(deleteHonor(id));
         } catch (error) {
@@ -153,7 +181,6 @@ const AdminHonors = () => {
         }
     };
 
-    // Show loading spinner while fetching data
     if (loading) {
         return (
             <div className="w-full min-h-screen bg-[#1a1a1a] flex items-center justify-center">
@@ -163,8 +190,8 @@ const AdminHonors = () => {
     }
 
     return (
-        <div className="w-full min-h-screen bg-[#1a1a1a] p-8">
-            <div className="max-w-7xl mx-auto">
+        <div className="w-full min-h-full bg-[#1a1a1a] p-8">
+            <div className="max-w-7xl mx-auto ">
                 <div className="flex justify-between items-center mb-8">
                     <div>
                         <h1 className="text-4xl font-bold text-white mb-2">
@@ -183,7 +210,6 @@ const AdminHonors = () => {
                     </button>
                 </div>
 
-                {/* Show honors grid only if honors exist */}
                 {honors && honors.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {honors.map((honor) => (
@@ -204,7 +230,7 @@ const AdminHonors = () => {
                                     <h3 className="text-xl font-semibold text-white mb-2">
                                         {honor.title}
                                     </h3>
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 mb-2">
                                         <Award
                                             size={16}
                                             className="text-gray-400"
@@ -212,6 +238,20 @@ const AdminHonors = () => {
                                         <p className="text-gray-400 text-sm">
                                             {honor.position}
                                         </p>
+                                    </div>
+
+                                    <div className="flex flex-col gap-2 mt-3">
+                                        {honor.certificate && (
+                                            <a
+                                                href={honor.certificate}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-1 text-[#EF6A93] text-sm hover:text-[#EF6A93]/80 transition-colors"
+                                            >
+                                                <FileText size={14} />
+                                                <span>View Certificate</span>
+                                            </a>
+                                        )}
                                     </div>
                                 </div>
 
@@ -226,7 +266,7 @@ const AdminHonors = () => {
                                     </button>
                                     <button
                                         onClick={() => handleDelete(honor._id)}
-                                        disabled={deleting === honor.id}
+                                        disabled={deleting === honor._id}
                                         className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {deleting === honor._id ? (
@@ -249,7 +289,6 @@ const AdminHonors = () => {
                         ))}
                     </div>
                 ) : (
-                    // Empty state - show only when no honors
                     <div className="text-center py-20">
                         <div className="w-20 h-20 mx-auto mb-4 bg-[#252525] rounded-full flex items-center justify-center">
                             <Trophy size={40} className="text-gray-500" />
@@ -269,11 +308,10 @@ const AdminHonors = () => {
                     </div>
                 )}
 
-                {/* Modal */}
                 {isModalOpen && (
-                    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                        <div className="bg-[#1f1f1f] rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
-                            <div className="sticky top-0 bg-[#1f1f1f] border-b border-[#2a2a2a] p-6 flex justify-between items-center">
+                    <div className="fixed inset-0 h-full bottom-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                        <div className="bg-[#1f1f1f] rounded-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto shadow-2xl">
+                            <div className="sticky top-0 bg-[#1f1f1f] border-b border-[#2a2a2a] p-6 flex justify-between items-center z-10">
                                 <h2 className="text-2xl font-bold text-white">
                                     {editingHonor
                                         ? "Edit Honor"
@@ -292,6 +330,63 @@ const AdminHonors = () => {
                                 onSubmit={handleSubmit}
                                 className="p-6 space-y-6"
                             >
+                                {/* Certificate Upload */}
+                                <div>
+                                    <label className="block text-gray-300 mb-2 font-medium">
+                                        Certificate Image
+                                        <span className="text-gray-500 text-sm ml-2">
+                                            (Optional)
+                                        </span>
+                                    </label>
+                                    <div className="relative">
+                                        {previewCertificate ? (
+                                            <div className="relative w-full h-48 rounded-lg overflow-hidden group">
+                                                <img
+                                                    src={previewCertificate}
+                                                    alt="Certificate Preview"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                    <label className="cursor-pointer px-4 py-2 bg-[#EF6A93] rounded-lg hover:bg-[#EF6A93]/80 transition-colors text-white">
+                                                        Change Certificate
+                                                        <input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            onChange={
+                                                                handleCertificateUpload
+                                                            }
+                                                            className="hidden"
+                                                        />
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-[#3a3a3a] rounded-lg cursor-pointer hover:border-[#EF6A93] transition-colors bg-[#252525]">
+                                                <div className="w-16 h-16 rounded-full bg-[#EF6A93]/10 flex items-center justify-center mb-3">
+                                                    <Upload
+                                                        size={32}
+                                                        className="text-[#EF6A93]"
+                                                    />
+                                                </div>
+                                                <span className="text-white font-medium mb-1">
+                                                    Click to upload certificate
+                                                </span>
+                                                <span className="text-gray-400 text-sm">
+                                                    PNG, JPG (Max 5MB)
+                                                </span>
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={
+                                                        handleCertificateUpload
+                                                    }
+                                                    className="hidden"
+                                                />
+                                            </label>
+                                        )}
+                                    </div>
+                                </div>
+
                                 <div>
                                     <label className="block text-gray-300 mb-2 font-medium">
                                         Award/Honor Title *
@@ -346,8 +441,8 @@ const AdminHonors = () => {
                                             Note:
                                         </span>{" "}
                                         All fields marked with * are required.
-                                        Add your most significant achievements
-                                        and recognition.
+                                        Upload certificate image for
+                                        authenticity.
                                     </p>
                                 </div>
 

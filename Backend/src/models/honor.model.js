@@ -18,7 +18,7 @@ const honorSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
-        link: {
+        certificate: {
             type: String,
         },
     },

@@ -1,8 +1,9 @@
 const { default: mongoose } = require("mongoose");
 const honorModel = require("../models/honor.model");
+const uploadFile = require("../services/storage.service");
 
 async function addHonor(req, res) {
-    const { title, position, year, link } = req.body;
+    const { title, position, year } = req.body;
 
     const isExists = await honorModel.findOne({ title });
 
@@ -10,11 +11,16 @@ async function addHonor(req, res) {
         return res.status(409).json({ message: "Honor already exists!" });
     }
 
+    let certificate;
+    if (req.file) {
+        certificate = await uploadFile(req.file);
+    }
+
     const honor = await honorModel.create({
         title,
-        link: link ? link : "",
         position,
         year,
+        certificate: certificate ? certificate.url : "",
         user: req.user.id,
     });
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Plus, Edit2, Trash2, X, Upload, ExternalLink } from "lucide-react";
-import axios from "axios";
+import axios from "../../utils/axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
     addProject,
@@ -83,10 +83,9 @@ const AdminProjects = () => {
 
     useEffect(() => {
         async function getProjects() {
-            const res = await axios.get(
-                "http://localhost:3000/api/admin/projects",
-                { withCredentials: true }
-            );
+            const res = await axios.get("/api/admin/projects", {
+                withCredentials: true,
+            });
 
             dispatch(setProjects(res.data.projects));
         }
@@ -112,7 +111,7 @@ const AdminProjects = () => {
             if (editingProject) {
                 // 🔄 Update existing project
                 const res = await axios.patch(
-                    `http://localhost:3000/api/admin/projects/${editingProject._id}`,
+                    `/api/admin/projects/${editingProject._id}`,
                     formDataToSend,
                     {
                         withCredentials: true,
@@ -124,7 +123,7 @@ const AdminProjects = () => {
             } else {
                 // 🆕 Create new project
                 const res = await axios.post(
-                    "http://localhost:3000/api/admin/projects",
+                    "/api/admin/projects",
                     formDataToSend,
                     {
                         withCredentials: true,
@@ -142,17 +141,16 @@ const AdminProjects = () => {
 
     const handleDelete = async (id) => {
         if (window.confirm("Are you want to delete this project?")) {
-            await axios.delete(
-                `http://localhost:3000/api/admin/projects/${id}`,
-                { withCredentials: true }
-            );
+            await axios.delete(`/api/admin/projects/${id}`, {
+                withCredentials: true,
+            });
 
             dispatch(deleteProject(id));
         }
     };
 
     return (
-        <div className="w-full min-h-screen bg-[#1a1a1a] p-8">
+        <div className="w-full min-h-full bg-[#1a1a1a] p-8">
             <div className="max-w-7xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <div>
@@ -258,8 +256,8 @@ const AdminProjects = () => {
 
                 {/* Modal */}
                 {isModalOpen && (
-                    <div className="fixed  inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                        <div className="bg-[#1f1f1f] parent rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
+                    <div className="fixed h-full inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                        <div className="bg-[#1f1f1f] parent rounded-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto shadow-2xl">
                             <div className="sticky z-30 top-0 bg-[#1f1f1f] border-b border-[#2a2a2a] p-6 flex justify-between items-center">
                                 <h2 className="text-2xl font-bold text-white">
                                     {editingProject
