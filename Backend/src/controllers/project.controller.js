@@ -88,7 +88,7 @@ async function updateProject(req, res) {
         if (title !== undefined && title !== "") updateData.title = title;
         if (role !== undefined && role !== "") updateData.role = role;
         if (year !== undefined && year !== "") updateData.year = year;
-        if (link !== undefined && link !== "") updateData.link = link;
+        if (link !== undefined) updateData.link = link;
 
         // Handle thumbnail upload if new file is provided
         if (req.file) {

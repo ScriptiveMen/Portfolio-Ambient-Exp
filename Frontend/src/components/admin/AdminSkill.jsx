@@ -97,7 +97,7 @@ const AdminSkill = () => {
     };
 
     return (
-        <div className="w-full h-full p-6">
+        <div className="w-full h-full p-6 ">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
                 <div>
@@ -153,7 +153,7 @@ const AdminSkill = () => {
                             <button
                                 type="button"
                                 onClick={() => append({ section: "" })}
-                                className="text-sm text-[#EF6A93] hover:text-[#EF6A93]/80 flex items-center gap-1"
+                                className="text-sm text-[#EF6A93] cursor-pointer hover:text-[#EF6A93]/80 flex items-center gap-1"
                             >
                                 <Plus className="w-4 h-4" />
                                 Add Section
@@ -194,7 +194,7 @@ const AdminSkill = () => {
                         <button
                             type="button"
                             onClick={handleFormSubmit}
-                            className="px-6 py-3 bg-[#EF6A93] rounded-lg hover:bg-[#EF6A93]/80 transition-colors font-semibold"
+                            className="px-6 py-3 bg-[#EF6A93] cursor-pointer rounded-lg hover:bg-[#EF6A93]/80 transition-colors font-semibold"
                         >
                             {editingId ? "Update Skill" : "Add Skill"}
                         </button>

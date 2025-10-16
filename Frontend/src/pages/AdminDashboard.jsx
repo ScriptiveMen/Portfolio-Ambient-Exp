@@ -103,8 +103,7 @@ const AdminDashboard = () => {
                     })}
                 </div>
 
-                {/* Content Area */}
-                <div className="flex-1 overflow-auto p-3 border border-white/10 bg-gradient-to-b from-[#131313] to-[#0f0f0f] rounded-2xl backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+                <div className="flex-1 parent overflow-auto p-3 border border-white/10 bg-gradient-to-b from-[#131313] to-[#0f0f0f] rounded-2xl backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
                     <Outlet />
                 </div>
             </div>

@@ -203,7 +203,7 @@ const AdminHonors = () => {
                     </div>
                     <button
                         onClick={() => openModal()}
-                        className="flex items-center gap-2 px-6 py-3 bg-[#EF6A93] rounded-lg hover:bg-[#EF6A93]/80 transition-colors text-white font-medium"
+                        className="flex items-center cursor-pointer gap-2 px-6 py-3 bg-[#EF6A93] rounded-lg hover:bg-[#EF6A93]/80 transition-colors text-white font-medium"
                     >
                         <Plus size={20} />
                         Add New Honor
@@ -259,7 +259,7 @@ const AdminHonors = () => {
                                     <button
                                         onClick={() => openModal(honor)}
                                         disabled={deleting === honor._id}
-                                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#3a3a3a] text-gray-300 rounded-lg hover:bg-[#404040] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-4 py-2 bg-[#3a3a3a] text-gray-300 rounded-lg hover:bg-[#404040] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <Edit2 size={16} />
                                         Edit
@@ -267,7 +267,7 @@ const AdminHonors = () => {
                                     <button
                                         onClick={() => handleDelete(honor._id)}
                                         disabled={deleting === honor._id}
-                                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="flex-1 flex cursor-pointer items-center justify-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {deleting === honor._id ? (
                                             <>

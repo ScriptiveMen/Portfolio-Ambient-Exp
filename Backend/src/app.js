@@ -6,16 +6,25 @@ const projectRoutes = require("./routes/project.routes");
 const skillRoutes = require("./routes/skill.routes");
 const honorRoutes = require("./routes/honor.routes");
 const cors = require("cors");
+const helmet = require("helmet");
+const { generalLimiter } = require("./middlewares/rateLimiter");
 const app = express();
 
+app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: ["http://localhost:5173"],
         credentials: true,
+        methods: ["GET", "POST", "PATCH", "DELETE"],
     })
 );
+
+app.use((req, res, next) => {
+    if (req.method === "GET") generalLimiter(req, res, next);
+    else next();
+});
 
 // Routes
 app.use("/api/admin/", userRoutes);

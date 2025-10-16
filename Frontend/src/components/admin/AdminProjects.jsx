@@ -54,7 +54,7 @@ const AdminProjects = () => {
     const handleImageUpload = (e) => {
         const file = e.target.files?.[0];
         if (file) {
-            setSelectedFile(file); // ✅ keep the file itself
+            setSelectedFile(file);
             const reader = new FileReader();
             reader.onloadend = () => setPreviewImage(reader.result);
             reader.readAsDataURL(file);
@@ -102,10 +102,10 @@ const AdminProjects = () => {
             formDataToSend.append("title", formData.title);
             formDataToSend.append("year", formData.year);
             formDataToSend.append("role", formData.role);
-            formDataToSend.append("link", formData.link);
+            formDataToSend.append("link", formData.link || "");
 
             if (selectedFile) {
-                formDataToSend.append("thumbnail", selectedFile); // ✅ add file here
+                formDataToSend.append("thumbnail", selectedFile);
             }
 
             if (editingProject) {
@@ -163,7 +163,7 @@ const AdminProjects = () => {
                     </div>
                     <button
                         onClick={() => openModal()}
-                        className="flex items-center gap-2 px-6 py-3 bg-[#EF6A93] rounded-lg hover:bg-[#EF6A93]/80 transition-colors text-white font-medium"
+                        className="flex items-center cursor-pointer gap-2 px-6 py-3 bg-[#EF6A93] rounded-lg hover:bg-[#EF6A93]/80 transition-colors text-white font-medium"
                     >
                         <Plus size={20} />
                         Add New Project
@@ -178,7 +178,10 @@ const AdminProjects = () => {
                         >
                             <div className="relative h-48 overflow-hidden bg-[#1f1f1f]">
                                 <img
-                                    src={project.thumbnail}
+                                    src={
+                                        project.thumbnail ||
+                                        "./images/comingsoon.webp"
+                                    }
                                     alt={project.title}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 />
@@ -214,7 +217,7 @@ const AdminProjects = () => {
                                 <div className="flex gap-2">
                                     <button
                                         onClick={() => openModal(project)}
-                                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#3a3a3a] text-gray-300 rounded-lg hover:bg-[#404040] transition-colors"
+                                        className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-4 py-2 bg-[#3a3a3a] text-gray-300 rounded-lg hover:bg-[#404040] transition-colors"
                                     >
                                         <Edit2 size={16} />
                                         Edit
@@ -223,7 +226,7 @@ const AdminProjects = () => {
                                         onClick={() =>
                                             handleDelete(project._id)
                                         }
-                                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-colors"
+                                        className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-colors"
                                     >
                                         <Trash2 size={16} />
                                         Delete
@@ -254,7 +257,6 @@ const AdminProjects = () => {
                     </div>
                 )}
 
-                {/* Modal */}
                 {isModalOpen && (
                     <div className="fixed h-full inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                         <div className="bg-[#1f1f1f] parent rounded-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto shadow-2xl">
@@ -276,7 +278,6 @@ const AdminProjects = () => {
                                 onSubmit={handleSubmit}
                                 className="p-6 space-y-6"
                             >
-                                {/* Thumbnail Upload */}
                                 <div>
                                     <label className="block text-gray-300 mb-2 font-medium">
                                         Thumbnail Image

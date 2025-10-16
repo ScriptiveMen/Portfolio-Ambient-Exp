@@ -189,7 +189,7 @@ const AdminResume = () => {
                             <div className="flex items-center gap-3 mt-4">
                                 <button
                                     onClick={handleView}
-                                    className="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors flex items-center gap-2"
+                                    className="px-4 py-2 cursor-pointer bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors flex items-center gap-2"
                                     disabled={deleting}
                                 >
                                     <Eye className="w-4 h-4" />
@@ -199,7 +199,7 @@ const AdminResume = () => {
                                 <button
                                     onClick={handleDelete}
                                     disabled={deleting}
-                                    className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="px-4 py-2 cursor-pointer bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {deleting ? (
                                         <>
