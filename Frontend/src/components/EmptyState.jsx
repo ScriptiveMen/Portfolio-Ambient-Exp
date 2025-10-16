@@ -5,14 +5,14 @@ const EmptyState = ({ type = "error", message }) => {
         error: {
             icon: WifiOff,
             title: "Oops! Couldn't connect",
-            defaultMessage: "Looks like the server's taking a coffee break ☕",
+            defaultMessage: "Looks like the server's taking a coffee break",
             color: "text-red-400",
         },
         empty: {
             icon: Database,
             title: "Nothing here yet",
             defaultMessage: "Check back soon for updates!",
-            color: "text-blue-400",
+            color: "text-teal-400",
         },
         loading: {
             icon: null,
