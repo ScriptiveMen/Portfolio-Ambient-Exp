@@ -34,15 +34,9 @@ async function addSkills(req, res) {
 async function getSkills(req, res) {
     const skills = await skillModel.find();
 
-    if (skills.length === 0) {
-        return res
-            .status(404)
-            .json({ message: "No skills found! Please add one" });
-    }
-
     res.status(200).json({
         message: "Skills fetched successfully",
-        skills,
+        skills: skills ? skills : [],
     });
 }
 

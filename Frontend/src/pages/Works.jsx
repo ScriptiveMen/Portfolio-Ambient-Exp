@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import GlowText from "../components/GlowText";
 import WorkCard from "../components/WorkCard";
+import EmptyState from "../components/EmptyState";
 import axios from "../utils/axios";
 
 const Works = () => {
@@ -25,16 +26,13 @@ const Works = () => {
         fetchProjects();
     }, []);
 
-    // Update locomotive when all images are loaded
     const handleImageLoaded = () => {
         imagesLoadedCountRef.current += 1;
 
-        // Update immediately on each image load
         if (window.locomotiveScroll) {
             window.locomotiveScroll.update();
         }
 
-        // If all images loaded, do a final update
         if (imagesLoadedCountRef.current === projects.length) {
             setTimeout(() => {
                 if (window.locomotiveScroll) {
@@ -104,30 +102,6 @@ const Works = () => {
         }
     };
 
-    if (loading) {
-        return (
-            <div
-                id="work"
-                data-scroll-section
-                className="w-full pt-25 pb-10 flex items-center justify-center min-h-screen"
-            >
-                <div className="text-white text-xl">Loading projects...</div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div
-                id="work"
-                data-scroll-section
-                className="w-full pt-25 pb-10 flex items-center justify-center min-h-screen"
-            >
-                <div className="text-red-500 text-xl">Error: {error}</div>
-            </div>
-        );
-    }
-
     const workData = transformProjectsToWorkData(projects);
 
     return (
@@ -144,10 +118,16 @@ const Works = () => {
                 </span>
                 <GlowText title={"Work Samples."} />
             </div>
-            {workData.length === 0 ? (
-                <div className="text-center text-white">
-                    No projects available
-                </div>
+
+            {loading ? (
+                <EmptyState type="loading" />
+            ) : error ? (
+                <EmptyState type="error" message={error} />
+            ) : workData.length === 0 ? (
+                <EmptyState
+                    type="empty"
+                    message="No projects to showcase yet. Stay tuned!"
+                />
             ) : (
                 workData.map((row, i) => (
                     <div key={i} className={`row${i + 1} ${row.rowClass}`}>

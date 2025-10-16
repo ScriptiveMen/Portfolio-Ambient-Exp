@@ -1,5 +1,6 @@
 import axios from "../utils/axios";
 import { useEffect, useRef, useState } from "react";
+import EmptyState from "../components/EmptyState";
 
 function AccordionItem({ skill }) {
     const [open, setOpen] = useState(false);
@@ -55,6 +56,8 @@ function AccordionItem({ skill }) {
 
 export default function SkillsAccordion() {
     const [skills, setSkills] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         async function getSkills() {
@@ -62,19 +65,32 @@ export default function SkillsAccordion() {
                 const res = await axios.get("/api/admin/skills");
                 setSkills(res.data.skills);
 
-                // Update locomotive after skills load
                 setTimeout(() => {
                     if (window.locomotiveScroll) {
                         window.locomotiveScroll.update();
                     }
                 }, 100);
-            } catch (error) {
-                console.error("Error fetching skills:", error);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
             }
         }
 
         getSkills();
-    }, []); // Fixed: Added empty dependency array to prevent infinite loop
+    }, []);
+
+    if (loading) {
+        return <EmptyState type="loading" />;
+    }
+
+    if (error) {
+        return <EmptyState type="error" message={error} />;
+    }
+
+    if (skills.length === 0) {
+        return <EmptyState type="empty" message="Skills data coming soon!" />;
+    }
 
     return (
         <div className="flex flex-col items-center py-10">

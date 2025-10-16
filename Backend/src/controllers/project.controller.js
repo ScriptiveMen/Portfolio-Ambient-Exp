@@ -45,16 +45,9 @@ async function getProjects(req, res) {
     try {
         const projects = await projectModel.find();
 
-        // Fix: Check for empty array, not null
-        if (projects.length === 0) {
-            return res
-                .status(404) // Fix: 404 instead of 409
-                .json({ message: "No projects found! Please add one." });
-        }
-
         res.status(200).json({
             message: "Projects fetched successfully",
-            projects,
+            projects: projects ? projects : [],
         });
     } catch (error) {
         console.error("Error fetching projects:", error);

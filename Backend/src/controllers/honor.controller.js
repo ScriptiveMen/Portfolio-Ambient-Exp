@@ -29,13 +29,10 @@ async function addHonor(req, res) {
 async function getHonor(req, res) {
     const honors = await honorModel.find();
 
-    if (honors.length === 0) {
-        return res
-            .status(404)
-            .json({ message: "No honors found! Please add one." });
-    }
-
-    res.status(200).json({ message: "Honors fetched sucessfully", honors });
+    res.status(200).json({
+        message: "Honors fetched sucessfully",
+        honors: honors ? honors : [],
+    });
 }
 async function updateHonor(req, res) {
     const { id } = req.params;
