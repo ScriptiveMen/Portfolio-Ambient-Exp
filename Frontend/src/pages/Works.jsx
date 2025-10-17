@@ -36,7 +36,6 @@ const Works = () => {
         if (imagesLoadedCountRef.current === projects.length) {
             setTimeout(() => {
                 if (window.locomotiveScroll) {
-                    console.log("All images loaded, final update");
                     window.locomotiveScroll.update();
                 }
             }, 100);

@@ -9,7 +9,6 @@ const ScrollProvider = ({ children }) => {
 
     useEffect(() => {
         if (!containerRef.current) {
-            console.log("❌ Container ref not found");
             return;
         }
 
@@ -45,7 +44,6 @@ const ScrollProvider = ({ children }) => {
         window.addEventListener("resize", handleResize);
 
         return () => {
-            console.log("🧹 Cleaning up Locomotive");
             window.removeEventListener("resize", handleResize);
             if (scroll) scroll.destroy();
             if (containerRef.current) {

@@ -25,14 +25,11 @@ export default function LoginForm() {
     }
 
     const onSubmit = async (data) => {
-        console.log("Login Data:", data);
-
         try {
             dispatch(setLoading(true));
             const res = await axios.post("/api/admin/login", data, {
                 withCredentials: true,
             });
-            console.log("Login success");
             dispatch(currentuser(res.data.user));
         } catch (error) {
             console.log("Error logging in!", error);
