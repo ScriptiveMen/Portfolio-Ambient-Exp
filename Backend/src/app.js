@@ -27,6 +27,12 @@ app.use((req, res, next) => {
 });
 
 // Routes
+app.get("/", (req, res) => {
+    res.status(200).json({
+        message: "Portfolio-Ambient's V2 server is up and running...",
+    });
+});
+
 app.use("/api/admin/", userRoutes);
 app.use("/api/admin/resume", resumeRoutes);
 app.use("/api/admin/projects", projectRoutes);
