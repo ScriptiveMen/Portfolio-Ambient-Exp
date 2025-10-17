@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import axios from "../utils/axios";
 
 const Home = () => {
     const [time, setTime] = useState(new Date());
@@ -10,6 +11,17 @@ const Home = () => {
         }, 1000);
 
         return () => clearInterval(interval);
+    }, []);
+
+    const [resumeUrl, setResumeUrl] = useState(null);
+
+    useEffect(() => {
+        async function getResume() {
+            const res = await axios.get("/api/admin/resume");
+            setResumeUrl(res.data.resume.url);
+        }
+
+        getResume();
     }, []);
 
     const getGMTOffset = () => {
@@ -55,9 +67,13 @@ const Home = () => {
             </div>
             <div className="flex items-center justify-center">
                 <a
-                    href="/images/Satya_Kumar_Ram__Full_Stack_.pdf"
+                    href={resumeUrl || "#"}
                     download="Satya_Kumar_Ram_Resume.pdf"
-                    className="block px-5 py-2 mt-15 text-[0.85rem] font-semibold md:hidden md:mt-0 rounded-full bg-[#ef6993] text-white text-center"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`block px-5 py-2 mt-15 text-[0.85rem] font-semibold md:hidden md:mt-0 rounded-full bg-[#ef6993] text-white text-center ${
+                        !resumeUrl && "pointer-events-none"
+                    }`}
                 >
                     Download Resume Offline
                 </a>
