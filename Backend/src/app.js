@@ -13,9 +13,16 @@ const app = express();
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
+
+const allowedOrigins = [
+    "http://localhost:5173",
+    process.env.FRONTEND_URL,
+    process.env.FRONTEND_URL_WWW,
+].filter(Boolean);
+
 app.use(
     cors({
-        origin: ["http://localhost:5173", "https://satyakumarram.in"],
+        origin: allowedOrigins,
         credentials: true,
         methods: ["GET", "POST", "PATCH", "DELETE"],
     })
