@@ -17,7 +17,7 @@ const App = () => {
                 // Fix: Pass the whole user object, not just the id
                 dispatch(currentuser(response.data.user));
             } catch (error) {
-                console.log("Not authenticated or error fetching user:", error);
+                dispatch(currentuser(null));
             } finally {
                 dispatch(setLoading(false));
             }
