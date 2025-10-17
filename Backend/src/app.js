@@ -15,10 +15,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
     cors({
-        origin: [
-            "http://localhost:5173",
-            "https://portfolio-ambient-v2.onrender.com",
-        ],
+        origin: ["http://localhost:5173", "https://satyakumarram.in"],
         credentials: true,
         methods: ["GET", "POST", "PATCH", "DELETE"],
     })
