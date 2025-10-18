@@ -21,7 +21,7 @@ const Home = () => {
             setResumeUrl(res.data.resume.url);
         }
 
-        getResume();
+        getResume().catch((err) => {});
     }, []);
 
     const getGMTOffset = () => {

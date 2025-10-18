@@ -3,6 +3,7 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import AllPages from "../pages/AllPages";
 import LoadingSpinner from "../components/admin/LoadingSpinner";
+import NotFound from "../components/NotFound";
 
 // Lazy load all admin-related components
 const AdminDashboard = lazy(() => import("../pages/AdminDashboard"));
@@ -117,6 +118,7 @@ const MainRoutes = () => {
                     }
                 />
             </Route>
+            <Route path="*" element={<NotFound />} />
         </Routes>
     );
 };

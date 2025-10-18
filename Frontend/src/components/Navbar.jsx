@@ -11,7 +11,7 @@ const Navbar = () => {
             setResumeUrl(res.data.resume.url);
         }
 
-        getResume();
+        getResume().catch((error) => {});
     }, []);
 
     return (
