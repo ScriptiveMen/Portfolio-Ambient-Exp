@@ -6,10 +6,21 @@ function AccordionItem({ skill }) {
     const [open, setOpen] = useState(false);
     const ref = useRef(null);
 
+    const toggleAccordion = () => {
+        setOpen(!open);
+
+        // Update Locomotive Scroll after animation completes
+        setTimeout(() => {
+            if (window.locomotiveScroll) {
+                window.locomotiveScroll.update();
+            }
+        }, 750); // Match the transition duration
+    };
+
     return (
         <div className="border-b border-gray-700 py-6">
             <button
-                onClick={() => setOpen(!open)}
+                onClick={toggleAccordion}
                 className="flex w-full justify-between items-center cursor-pointer"
             >
                 <div className="flex items-center space-x-3">
@@ -64,7 +75,6 @@ export default function SkillsAccordion() {
             try {
                 const res = await axios.get("/api/admin/skills");
                 setSkills(res.data.skills);
-
                 setTimeout(() => {
                     if (window.locomotiveScroll) {
                         window.locomotiveScroll.update();
@@ -79,6 +89,20 @@ export default function SkillsAccordion() {
 
         getSkills();
     }, []);
+
+    // Add resize observer to update scroll on any content changes
+    useEffect(() => {
+        if (skills.length > 0 && window.locomotiveScroll) {
+            const updateScroll = () => {
+                window.locomotiveScroll.update();
+            };
+
+            // Update scroll periodically when accordions might be animating
+            const interval = setInterval(updateScroll, 1000);
+
+            return () => clearInterval(interval);
+        }
+    }, [skills]);
 
     if (loading) {
         return <EmptyState type="loading" />;

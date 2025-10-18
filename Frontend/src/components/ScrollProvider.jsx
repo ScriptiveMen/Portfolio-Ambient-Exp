@@ -23,24 +23,24 @@ const ScrollProvider = ({ children }) => {
             tablet: {
                 smooth: false,
             },
+            multiplier: 1.0, // Add this
+            class: "is-inview", // Add this
         });
 
         locomotiveScrollRef.current = scroll;
-
-        // Store instance on the container element AND window for access
         containerRef.current.locomotive = scroll;
-        window.locomotiveScroll = scroll; // Add this for easier access
+        window.locomotiveScroll = scroll;
 
         // Wait for all images to load before initial update
         imagesLoaded(containerRef.current, () => {
             scroll.update();
+            setTimeout(() => scroll.update(), 500); // Add delayed update
         });
 
         // Update on window resize
         const handleResize = () => {
             scroll.update();
         };
-
         window.addEventListener("resize", handleResize);
 
         return () => {
